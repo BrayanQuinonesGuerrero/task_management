@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+
+
+{% block title %}
+    User login
+{% endblock title %}
+
+{% block content %}
+    <h2>Login</h2>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account?<a href="{% url 'users:register' %}">Register</a></p>
+    <p>You have forgotten your password?<a href="{% url 'users:password_reset' %}">Reset password</a></p>
+{% endblock content %}

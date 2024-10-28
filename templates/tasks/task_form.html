@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+  <h2>{% if object %}Edit Task{% else %}Create Task{% endif %}</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">
+      {% if object %}Update Task{% else %}Create Task{% endif %}
+    </button>
+  </form>
+
+  <a href="{% url 'tasks:task_list' %}">Back to Task List</a>
+{% endblock %}

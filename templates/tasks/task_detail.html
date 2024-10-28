@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+
+{% block title %}
+    Task detail
+{% endblock title %}
+
+{% block content %}
+
+    <h1>Title: {{ object.title|capfirst }}</h1>
+    <p>Description: {{ object.description|capfirst }}</p>
+    <p>Status: {{ object.get_status_display|capfirst }}</p>
+    <p>Priority: {{ object.get_priority_display|capfirst }}</p>
+    <p>Assigned to: {{ object.assigned_to|capfirst }}</p>
+    <p>Due date: {{ object.due_date|date:"F j, Y"|capfirst }}</p>
+    <p>Creation date: {{ object.history.last.history_date|date:"F j, Y g:i A"|capfirst }}</p>
+    <p>Last update: {{ object.history.first.history_date|date:"F j, Y g:i A"|capfirst }}</p>
+
+    <a href="{% url 'tasks:task_list' %}">Back to task list</a>
+    <a href="{% url 'tasks:task_update' object.pk %}">Edit task</a>
+    <a href="{% url 'tasks:task_delete' object.pk %}">Delete task</a>
+
+{% endblock content %}

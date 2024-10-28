@@ -1,29 +1,20 @@
 {% extends "layouts/base.html" %}
 
-
 {% block title %}
     Home
 {% endblock title %}
 
 {% block content %}
-    <h1>Hello, welcome to Django {{ user.first_name }}</h1>
-
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-
-    {% if user.is_authenticated %}
-        <form method="POST" action="{% url 'users:logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-link">Logout</button>
-        </form>
-    {% else %}
-        <a href="{% url 'users:login' %}">Login</a>
-    {% endif %}
-
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1 class="display-4 fw-bold text-primary">Hello, welcome to Task Management</h1>
+            <p class="lead text-muted">Manage your tasks efficiently and stay organized!</p>
+            
+            <!-- Botones de navegación -->
+            <div class="mt-4">
+                <a href="{% url 'tasks:task_list' %}" class="btn btn-primary btn-lg me-2">View Tasks</a>
+                <a href="{% url 'tasks:task_create' %}" class="btn btn-outline-primary btn-lg">Create New Task</a>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

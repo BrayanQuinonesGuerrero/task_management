@@ -7,21 +7,15 @@ from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import views as auth_views
-from django.views import View
 
 from .forms import UserRegistrationForm
 
 
 User = get_user_model()
-
-
-class HomeView(View):
-    def get(self, request):
-        return render(request, 'home/index.html')
 
 
 class UserRegistrationView(CreateView):
@@ -72,12 +66,7 @@ def activate_account(request, uidb64, token):
 class UserLoginView(LoginView):
     template_name = 'users/login.html'
     redirect_authenticated_user = True
-    success_url = reverse_lazy('users:home')
-    redirect_field_name = None
-
-    def form_valid(self, form):
-        messages.success(self.request, 'You are now logged in.')
-        return super().form_valid(form)
+    success_url = reverse_lazy('tasks:task_list')
 
 
 class UserLogoutView(LogoutView):

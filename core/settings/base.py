@@ -1,3 +1,4 @@
+import os
 import environ
 from pathlib import Path
 
@@ -20,11 +21,12 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-
+    'simple_history',
 ]
 
 LOCAL_APPS = [
     'apps.users',
+    'apps.tasks',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -100,6 +102,7 @@ STATIC_URL = 'static/'
 # Media Files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Default primary key field type
@@ -111,6 +114,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 
-LOGIN_REDIRECT_URL = 'users:home'
-#LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'tasks:task_list'
+LOGIN_URL = 'users:login'
 LOGOUT_REDIRECT_URL = 'users:login'

@@ -6,21 +6,45 @@
 {% endblock title %}
 
 {% block content %}
-    <h2>User registration form</h2>
-    
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
+    <div class="container mt-5 pt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">User registration</h2>
+                
+                <!-- Error or success messages -->
+                {% if messages %}
+                    <div class="alert alert-info">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-    <p>Already have an account?<a href="{% url 'users:login' %}">Login</a></p>
+                <!-- Registration form -->
+                <form method="POST" class="border p-4 rounded shadow-sm bg-light">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </form>
+
+                <p class="text-center mt-3">
+                    Already have an account?
+                    <a href="{% url 'users:login' %}">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
 {% endblock content %}

@@ -1,19 +1,22 @@
 {% extends "layouts/base.html" %}
 
+
 {% block title %}
     Home
 {% endblock title %}
 
 {% block content %}
-    <div class="container mt-5">
+    <div class="container mt-5 pt-4 mb-4">
         <div class="text-center">
             <h1 class="display-4 fw-bold text-primary">Hello, welcome to Task Management</h1>
             <p class="lead text-muted">Manage your tasks efficiently and stay organized!</p>
             
-            <!-- Botones de navegación -->
+            <!-- Navigation buttons -->
             <div class="mt-4">
-                <a href="{% url 'tasks:task_list' %}" class="btn btn-primary btn-lg me-2">View Tasks</a>
-                <a href="{% url 'tasks:task_create' %}" class="btn btn-outline-primary btn-lg">Create New Task</a>
+                <a href="{% url 'tasks:task_list' %}" class="btn btn-primary btn-lg me-2">View tasks</a>
+                <a href="{% url 'tasks:task_create' %}" class="btn btn-outline-primary btn-lg">
+                    Create new task
+                </a>
             </div>
         </div>
     </div>

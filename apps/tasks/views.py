@@ -37,6 +37,7 @@ class TaskListView(LoginRequiredMixin, ListView):
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     template_name = 'tasks/task_detail.html'
+    context_object_name = 'task'
 
     def get_queryset(self):
         return Task.objects.filter(assigned_to=self.request.user)
@@ -49,7 +50,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('tasks:task_list')
 
     def form_valid(self, form):
-        # Asignar automáticamente la tarea al usuario actual
+        # Automatically assign task to current user
         form.instance.assigned_to = self.request.user
         return super().form_valid(form)
 
@@ -61,15 +62,14 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('tasks:task_list')
 
     def get_queryset(self):
-        # Solo permitir que el usuario modifique sus propias tareas
+        # Only allow the user to modify their own tasks
         return Task.objects.filter(assigned_to=self.request.user)
 
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
-    template_name = 'tasks/task_delete.html'
     success_url = reverse_lazy('tasks:task_list')
 
     def get_queryset(self):
-        # Solo permitir que el usuario elimine sus propias tareas
+        # Only allow the user to delete their own tasks
         return Task.objects.filter(assigned_to=self.request.user)

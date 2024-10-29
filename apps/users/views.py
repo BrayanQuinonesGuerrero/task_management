@@ -9,11 +9,14 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import (
+    LoginView, LogoutView, 
+    PasswordResetView, 
+    PasswordResetDoneView, 
+    PasswordResetConfirmView
+)
 
-from .forms import UserRegistrationForm
-
+from .forms import UserRegistrationForm, UserLoginForm, UserPasswordResetForm, UserPasswordResetConfirmForm
 
 User = get_user_model()
 
@@ -64,16 +67,22 @@ def activate_account(request, uidb64, token):
 
 
 class UserLoginView(LoginView):
+    form_class = UserLoginForm
     template_name = 'users/login.html'
     redirect_authenticated_user = True
     success_url = reverse_lazy('tasks:task_list')
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid username or password. Please try again.')
+        return super().form_invalid(form)
 
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('users:login')
 
 
-class PasswordResetView(auth_views.PasswordResetView):
+class PasswordResetView(PasswordResetView):
+    form_class = UserPasswordResetForm
     template_name = 'users/password_reset/password_reset.html'
     email_template_name = 'users/password_reset/password_reset_email.html'
     success_url = reverse_lazy('users:password_reset_done')
@@ -84,19 +93,17 @@ class PasswordResetView(auth_views.PasswordResetView):
 
         if associated_users.exists():
             return super().form_valid(form)
-        else:
-            messages.error(self.request, 'Email not found.')
-            return self.form_invalid(form)
 
 
-class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+class PasswordResetDoneView(PasswordResetDoneView):
     template_name = 'users/password_reset/password_reset_done.html'
 
 
-class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+class PasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = UserPasswordResetConfirmForm
     template_name = 'users/password_reset/password_reset_confirm.html'
-    success_url = reverse_lazy('users:password_reset_complete')
-
-
-class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
-    template_name = 'users/password_reset/password_reset_complete.html'
+    success_url = reverse_lazy('users:login')
+    
+    def get_success_url(self):
+        messages.success(self.request, 'Your password has been reset. Please log in with your new password.')
+        return super().get_success_url()

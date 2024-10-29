@@ -7,7 +7,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     
-    <!-- Enlaces del navbar -->
+    <!-- Navbar Links -->
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
@@ -15,6 +15,7 @@
         </li>
         
         {% if user.is_authenticated %}
+
           <li class="nav-item">
             <a class="nav-link" href="{% url 'tasks:task_list' %}">Tasks list</a>
           </li>
@@ -24,16 +25,21 @@
           <li class="nav-item">
             <form method="POST" action="{% url 'users:logout' %}">
               {% csrf_token %}
-              <button type="submit" class="nav-link">Logout</button>
+              <button type="submit" class="nav-link" style="border:none; background:none">
+                Logout
+              </button>
             </form>
           </li>
+
         {% else %}
+
           <li class="nav-item">
             <a class="nav-link" href="{% url 'users:login' %}">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'users:register' %}">Register</a>
           </li>
+
         {% endif %}
 
       </ul>

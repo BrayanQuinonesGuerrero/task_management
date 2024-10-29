@@ -1,16 +1,37 @@
 {% extends 'layouts/base.html' %}
 
+
+{% block title %}
+  {% if object %}Edit task{% else %}Create task{% endif %}
+{% endblock title %}
+
 {% block content %}
-  <h2>{% if object %}Edit Task{% else %}Create Task{% endif %}</h2>
+  <div class="container mt-5 pt-4 mb-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        
+        <!-- Task creation/editing form -->
+        <form method="POST" class="border p-4 rounded shadow-sm bg-light">
+          <h2 class="text-center mb-4">{% if object %}Edit task{% else %}Create task{% endif %}</h2>
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% for error in field.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary w-100">
+            {% if object %}Update task{% else %}Create task{% endif %}
+          </button>
+        </form>
 
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button type="submit">
-      {% if object %}Update Task{% else %}Create Task{% endif %}
-    </button>
-  </form>
-
-  <a href="{% url 'tasks:task_list' %}">Back to Task List</a>
+        <div class="text-center mt-4">
+          <a href="{% url 'tasks:task_list' %}" class="btn btn-secondary">Back to task list</a>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

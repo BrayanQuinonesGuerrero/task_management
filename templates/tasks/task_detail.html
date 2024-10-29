@@ -2,22 +2,87 @@
 
 
 {% block title %}
-    Task detail
+    Task Detail
 {% endblock title %}
 
 {% block content %}
+    <div class="container mt-5 pt-4 mb-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
 
-    <h1>Title: {{ object.title|capfirst }}</h1>
-    <p>Description: {{ object.description|capfirst }}</p>
-    <p>Status: {{ object.get_status_display|capfirst }}</p>
-    <p>Priority: {{ object.get_priority_display|capfirst }}</p>
-    <p>Assigned to: {{ object.assigned_to|capfirst }}</p>
-    <p>Due date: {{ object.due_date|date:"F j, Y"|capfirst }}</p>
-    <p>Creation date: {{ object.history.last.history_date|date:"F j, Y g:i A"|capfirst }}</p>
-    <p>Last update: {{ object.history.first.history_date|date:"F j, Y g:i A"|capfirst }}</p>
+                <!-- Card to display task details -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h5 mb-0">Task detail</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Title: {{ task.title|capfirst }}</h3>
+                        <p class="card-text"><strong>Description:</strong> {{ task.description|capfirst }}</p>
+                        <p class="card-text"><strong>Status:</strong> {{ task.get_status_display|capfirst }}</p>
+                        <p class="card-text"><strong>Priority:</strong> {{ task.get_priority_display|capfirst }}</p>
+                        <p class="card-text"><strong>Assigned to:</strong> {{ task.assigned_to|capfirst }}</p>
+                        <p class="card-text"><strong>Due date:</strong> {{ task.due_date|date:"j \d\e F \d\e\l Y"|capfirst }}</p>
+                        <p class="card-text"><strong>Creation date:</strong> {{ task.history.last.history_date|date:"j \d\e F \d\e\l Y - g:i A"|capfirst }}</p>
+                        <p class="card-text"><strong>Last update:</strong> {{ task.history.first.history_date|date:"j \d\e F \d\e\l Y - g:i A"|capfirst }}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{% url 'tasks:task_list' %}" class="btn btn-secondary">Back to task list</a>
+                        <div>
+                            <a href="{% url 'tasks:task_update' task.pk %}" class="btn btn-primary me-2">
+                                Edit task
+                            </a>
+                            <a href="#" class="btn btn-danger delete-task-btn" data-task-id="{{ task.pk }}" data-task-title="{{ task.title }}">
+                                Delete task
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{% url 'tasks:task_list' %}">Back to task list</a>
-    <a href="{% url 'tasks:task_update' object.pk %}">Edit task</a>
-    <a href="{% url 'tasks:task_delete' object.pk %}">Delete task</a>
-
+    <!-- Delete confirmation modal -->
+    <div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteTaskModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the task: "<span id="taskTitle"></span>"?</p>
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteTaskForm" method="POST">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Yes, delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
+
+{% block extra_js %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const deleteTaskBtns = document.querySelectorAll(".delete-task-btn");
+      const deleteModal = new bootstrap.Modal(document.getElementById("deleteTaskModal"));
+      const taskTitleSpan = document.getElementById("taskTitle");
+      const deleteTaskForm = document.getElementById("deleteTaskForm");
+
+      deleteTaskBtns.forEach((btn) => {
+        btn.addEventListener("click", function (event) {
+          event.preventDefault();
+          const taskId = this.getAttribute("data-task-id");
+          const taskTitle = this.getAttribute("data-task-title");
+
+          taskTitleSpan.textContent = taskTitle;
+          deleteTaskForm.action = `{% url 'tasks:task_delete' 0 %}`.replace("0", taskId);
+          deleteModal.show();
+        });
+      });
+    });
+  </script>
+{% endblock extra_js %}

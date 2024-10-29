@@ -1,24 +1,26 @@
 {% extends 'layouts/base.html' %}
 
+
 {% block title %}
-    Task List
+    Task list
 {% endblock title %}
 
 {% block content %}
   <div class="container mt-5 pt-4">
-    <h1 class="text-center mb-4">Hello, welcome to your Task List, {{ user.first_name|capfirst }}</h1>
+    <h1 class="text-center mb-4">Hello, welcome to your Task list, {{ user.first_name|capfirst }}</h1>
 
-    <!-- Lista de tareas -->
+    <!-- Task list -->
     <div class="row">
       {% for task in tasks %}
         <div class="col-md-6 col-lg-4 mb-4">
-          <div class="card shadow-sm h-100">
+          <!-- Apply a conditional class for completed tasks -->
+          <div class="card shadow-sm h-100 {% if task.status == 'completed' %}bg-light text-muted border-success{% endif %}">
             <div class="card-body">
-              <h5 class="card-title">{{ task.title }}</h5>
+              <h5 class="card-title">{{ task.title|capfirst }}</h5>
               <p class="card-text">
                 <strong>Priority:</strong> {{ task.get_priority_display }}<br>
                 <strong>Status:</strong> {{ task.get_status_display }}<br>
-                <strong>Due Date:</strong> {{ task.due_date }}
+                <strong>Due Date:</strong> {{ task.due_date|date:"j \d\e F \d\e\l Y"|capfirst }}
               </p>
               <div class="d-flex justify-content-between">
                 <a href="{% url 'tasks:task_detail' task.pk %}" class="btn btn-primary btn-sm">View</a>
@@ -32,7 +34,7 @@
     </div>
   </div>
 
-  <!-- Modal de confirmación de eliminación -->
+  <!-- Delete confirmation modal -->
   <div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

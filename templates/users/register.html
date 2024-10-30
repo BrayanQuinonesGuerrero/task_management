@@ -12,15 +12,6 @@
             <div class="col-md-6">
                 <h2 class="text-center mb-4">User registration</h2>
                 
-                <!-- Error or success messages -->
-                {% if messages %}
-                    <div class="alert alert-info">
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
                 <!-- Registration form -->
                 <form method="POST" class="border p-4 rounded shadow-sm bg-light">
                     {% csrf_token %}

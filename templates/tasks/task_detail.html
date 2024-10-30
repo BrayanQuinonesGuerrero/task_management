@@ -1,6 +1,8 @@
 {% extends "layouts/base.html" %}
 
 
+{% load static %}
+
 {% block title %}
     Task Detail
 {% endblock title %}
@@ -41,48 +43,10 @@
         </div>
     </div>
 
-    <!-- Delete confirmation modal -->
-    <div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteTaskModalLabel">Confirm Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete the task: "<span id="taskTitle"></span>"?</p>
-                </div>
-                <div class="modal-footer">
-                    <form id="deleteTaskForm" method="POST">
-                        {% csrf_token %}
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Yes, delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "layouts/partials/delete_confirm_modal.html" %}
+
 {% endblock content %}
 
 {% block extra_js %}
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const deleteTaskBtns = document.querySelectorAll(".delete-task-btn");
-      const deleteModal = new bootstrap.Modal(document.getElementById("deleteTaskModal"));
-      const taskTitleSpan = document.getElementById("taskTitle");
-      const deleteTaskForm = document.getElementById("deleteTaskForm");
-
-      deleteTaskBtns.forEach((btn) => {
-        btn.addEventListener("click", function (event) {
-          event.preventDefault();
-          const taskId = this.getAttribute("data-task-id");
-          const taskTitle = this.getAttribute("data-task-title");
-
-          taskTitleSpan.textContent = taskTitle;
-          deleteTaskForm.action = `{% url 'tasks:task_delete' 0 %}`.replace("0", taskId);
-          deleteModal.show();
-        });
-      });
-    });
-  </script>
+  <script src="{% static 'tasks/js/delete_task.js' %}"></script>
 {% endblock extra_js %}

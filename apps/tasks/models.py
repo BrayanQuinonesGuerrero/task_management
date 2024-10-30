@@ -43,4 +43,4 @@ class Task(models.Model):
         return self.title
     
     class Meta:
-        ordering = ['priority', 'status', 'due_date', 'title']
+        ordering = ['status', 'priority', 'due_date', 'title']

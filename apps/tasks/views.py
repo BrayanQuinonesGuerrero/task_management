@@ -20,17 +20,15 @@ class TaskListView(LoginRequiredMixin, ListView):
                     When(priority='high', then=Value(1)),
                     When(priority='medium', then=Value(2)),
                     When(priority='low', then=Value(3)),
-                    default=Value(4),
                     output_field=models.IntegerField()
                 ),
-                priority_status=Case(
+                status_order=Case(
                     When(status='pending', then=Value(1)),
-                    When(status='in_progress', then=Value(2)),
-                    When(status='completed', then=Value(3)),
-                    default=Value(4),
+                    When(status='in_progress', then=Value(1)),
+                    When(status='completed', then=Value(2)),
                     output_field=models.IntegerField()
                 )
-            ).order_by('priority_order', 'priority_status', 'due_date', 'title')
+            ).order_by('status_order', 'priority_order', 'due_date', 'title')
         )
 
 
